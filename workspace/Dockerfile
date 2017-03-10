@@ -200,7 +200,9 @@ RUN if [ ${INSTALL_NODE} = true ]; then \
         nvm install ${NODE_VERSION} && \
         nvm use ${NODE_VERSION} && \
         nvm alias ${NODE_VERSION} && \
-        npm install -g gulp bower vue-cli \
+        npm install -g gulp bower vue-cli &&\
+        npm install -g cordova handlebars stylus sass less nib db2md browser-sync browserify watchify && \
+        npm install -g rimraf csslint eslint jshint stylint quasar-cli wt-cli prettier \
 ;fi
 
 # Wouldn't execute when added to the RUN statement in the above block

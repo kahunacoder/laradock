@@ -7,8 +7,9 @@ services:
     applications:
         image: tianon/true
         volumes:
-            - ../:/var/www
-#            - ../sample/:/var/www/sample
+            # - ../:/var/www
+            - ../mlm/:/var/www/mlm
+            - ../kc/:/var/www/kc
 
 ### Workspace Utilities Container ###########################
 
@@ -19,8 +20,8 @@ services:
                 - INSTALL_XDEBUG=false
                 - INSTALL_SOAP=false
                 - INSTALL_MONGO=false
-                - INSTALL_NODE=false
-                - INSTALL_YARN=false
+                - INSTALL_NODE=true
+                - INSTALL_YARN=true
                 - INSTALL_DRUSH=false
                 - INSTALL_AEROSPIKE_EXTENSION=false
                 - INSTALL_V8JS_EXTENSION=false
@@ -34,12 +35,12 @@ services:
                 - PGID=1000
                 - NODE_VERSION=stable
                 - YARN_VERSION=latest
-                - TZ=UTC
+                - TZ=America/New_York
         volumes_from:
             - applications
         extra_hosts:
             # IMPORTANT: Replace with your Docker Host IP (will be appended to /etc/hosts)
-            - "dockerhost:10.0.75.1"
+            - "dockerhost:127.0.0.1"
         ports:
            - "2222:22"
         tty: true
@@ -53,15 +54,16 @@ services:
                 - INSTALL_XDEBUG=false
                 - INSTALL_SOAP=false
                 - INSTALL_MONGO=false
-                - INSTALL_ZIP_ARCHIVE=false
-                - INSTALL_BCMATH=false
+                - INSTALL_ZIP_ARCHIVE=true
+                - INSTALL_BCMATH=true
+                - INSTALL_GMP=true
                 - INSTALL_PHPREDIS=false
                 - INSTALL_MEMCACHED=false
                 - INSTALL_OPCACHE=false
                 - INSTALL_EXIF=false
                 - INSTALL_AEROSPIKE_EXTENSION=false
-                - CODEIGNITER=false
-            dockerfile: Dockerfile-70
+                - CODEIGNITER=true
+            dockerfile: Dockerfile-gts
         volumes_from:
             - applications
         expose:
@@ -70,7 +72,7 @@ services:
             - workspace
         extra_hosts:
             # IMPORTANT: Replace with your Docker Host IP (will be appended to /etc/hosts)
-            - "dockerhost:10.0.75.1"
+            - "dockerhost:127.0.0.1"
         environment:
             # IMPORTANT: Set the Remote Interpreter entry matching name to `laravel`
             - PHP_IDE_CONFIG=serverName=laravel
@@ -85,6 +87,7 @@ services:
         volumes_from:
             - applications
         volumes:
+           # - ../mlm/log:/var/log/nginx
             - ./logs/nginx/:/var/log/nginx
             - ./nginx/sites/:/etc/nginx/sites-available
         ports:
@@ -145,6 +148,7 @@ services:
                 - MYSQL_ROOT_PASSWORD=root
         volumes:
             - mysql:/var/lib/mysql
+            - ./data:/docker-entrypoint-initdb.d
         ports:
             - "3306:3306"
 
@@ -154,13 +158,18 @@ services:
         build: ./mariadb
         volumes:
             - mariadb:/var/lib/mysql
+            - ./data:/docker-entrypoint-initdb.d
         ports:
             - "3306:3306"
         environment:
-            MYSQL_DATABASE: homestead
-            MYSQL_USER: homestead
-            MYSQL_PASSWORD: secret
-            MYSQL_ROOT_PASSWORD: root
+            # MYSQL_DATABASE: homestead
+            # MYSQL_USER: homestead
+            # MYSQL_PASSWORD: secret
+            # MYSQL_ROOT_PASSWORD: root
+            - MYSQL_DATABASE=homestead
+            - MYSQL_USER=homestead
+            - MYSQL_PASSWORD=secret
+            - MYSQL_ROOT_PASSWORD=root
 
 ### PostgreSQL Container ####################################
 
@@ -317,9 +326,9 @@ services:
             - "8080:80"
         links:
             # for mysql container
-            - "mysql:db"
+            #- "mysql:db"
             # for mariadb container
-            # - "mariadb:db"
+             - "mariadb:db"
 
 ### pgAdmin Container #######################################
 

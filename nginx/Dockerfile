@@ -15,7 +15,7 @@ RUN apk update \
     && adduser -D -H -u 1000 -s /bin/bash www-data \
     && rm /etc/nginx/conf.d/default.conf \
     && echo "upstream php-upstream { server ${PHP_UPSTREAM}:9000; }" > /etc/nginx/conf.d/upstream.conf
-
+ADD certs /etc/nginx/
 CMD ["nginx"]
 
 EXPOSE 80 443
