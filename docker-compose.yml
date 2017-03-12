@@ -9,7 +9,8 @@ services:
         volumes:
             # - ../:/var/www
             - ../mlm/:/var/www/mlm
-            - ../kc/:/var/www/kc
+            - ../codeigniter/:/var/www/codeigniter
+            - ../laravel/:/var/www/laravel
 
 ### Workspace Utilities Container ###########################
 
